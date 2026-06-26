@@ -124,8 +124,7 @@ def main() -> None:
     if args.rounds <= 0:
         raise SystemExit("O numero de rodadas precisa ser positivo.")
 
-    print("Jogo CHSH (circuito quantico real - Qiskit)")
-    print("Estado de Bell |Phi+> = (|00> + |11>) / sqrt(2)")
+    print("Jogo CHSH")
     print("Condicao de vitoria: a XOR b = x AND y")
     print(f"Rodadas: {args.rounds} | semente: {args.seed}")
     print()
