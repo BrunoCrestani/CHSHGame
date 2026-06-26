@@ -1,8 +1,8 @@
 # Jogo CHSH
 
-Este projeto simula o jogo CHSH, um exemplo classico usado para mostrar a
-diferenca entre estrategias classicas e estrategias quanticas com
-emaranhamento.
+Este projeto demonstra o jogo CHSH usando um circuito quantico real no
+Qiskit. Ele mostra a diferenca entre o limite classico (no maximo `75%` de
+vitorias) e a estrategia quantica com emaranhamento (`~85.36%`).
 
 ## Ideia do jogo
 
@@ -21,71 +21,67 @@ a XOR b = x AND y
 
 Alice e Bob nao podem se comunicar depois de receber `x` e `y`.
 
-## Estrategias implementadas
+## Estrategia quantica
 
-- Estrategia classica: Alice e Bob sempre respondem `0`. Ela vence em torno de
-  `75%` das rodadas.
-- Estrategia quantica: simula as correlacoes de um par emaranhado com angulos
-  de medicao otimos. Ela vence em torno de `85.36%` das rodadas.
+Antes do jogo, Alice e Bob compartilham um par emaranhado (estado de Bell):
 
-O codigo nao usa uma biblioteca quantica pesada. Ele simula diretamente as
-probabilidades teoricas:
+```text
+|Phi+> = (|00> + |11>) / sqrt(2)
+```
+
+Cada um mede o seu qubit em uma base que depende do bit recebido. Com os
+angulos de medicao otimos, eles vencem com probabilidade:
 
 ```text
 P(vitoria quantica) = cos^2(pi / 8) ~= 0.8536
 ```
 
+O circuito e montado de verdade (`H` + `CNOT` para o emaranhamento, `Ry` para
+as bases de medicao) e executado no simulador local Aer.
+
+## Instalacao
+
+Recomendado usar um ambiente virtual:
+
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+```
+
 ## Como executar
 
 ```bash
-python3 chsh_game.py
-```
-
-Tambem e possivel escolher o numero de rodadas:
-
-```bash
-python3 chsh_game.py --rounds 100000
-```
-
-Para ver logs de progresso e exemplos das primeiras rodadas:
-
-```bash
-python3 chsh_game.py --rounds 20 --verbose
+python3 chsh_qiskit.py                 # 10000 rodadas
+python3 chsh_qiskit.py --rounds 100000 # mais rodadas
+python3 chsh_qiskit.py --show-circuit  # mostra o circuito
 ```
 
 Exemplo de saida:
 
 ```text
-Jogo CHSH
-Condicao de vitoria: a XOR b = x AND y
-Rodadas por estrategia: 10000
-Semente aleatoria: 42
-
-Classica: sempre 0      vitorias:   7500/10000  observado:  75.00% teorico:  75.00%
 Detalhe por entrada:
-  x=0, y=0:  2500/2500  (100.00%)
-  x=0, y=1:  2500/2500  (100.00%)
-  x=1, y=0:  2500/2500  (100.00%)
-  x=1, y=1:     0/2500  (  0.00%)
+  x=0, y=0 ( a = b):   2103/2500   ( 84.12%)
+  x=0, y=1 ( a = b):   2147/2500   ( 85.88%)
+  x=1, y=0 ( a = b):   2097/2500   ( 83.88%)
+  x=1, y=1 (a != b):   2171/2500   ( 86.84%)
 
-Quantica: otima         vitorias:   8536/10000  observado:  85.36% teorico:  85.36%
-Detalhe por entrada:
-  x=0, y=0:  2134/2500  ( 85.36%)
-  x=0, y=1:  2134/2500  ( 85.36%)
-  x=1, y=0:  2134/2500  ( 85.36%)
-  x=1, y=1:  2134/2500  ( 85.36%)
+Taxa de vitoria quantica: 85.18%  (teorico: 85.36%)
+Limite classico: 75.00%
 ```
 
-Como a simulacao usa sorteio aleatorio, os valores observados podem variar um
-pouco.
+Como a simulacao usa medicoes aleatorias, os valores observados podem variar
+um pouco a cada execucao.
 
 ## Testes
 
 ```bash
-python3 -m unittest
+python3 -m unittest test_chsh_qiskit
 ```
 
 ## Arquivos
 
-- `chsh_game.py`: simulador principal.
-- `test_chsh_game.py`: testes automaticos simples.
+- `chsh_qiskit.py`: jogo com circuito quantico real (Qiskit + Aer).
+- `test_chsh_qiskit.py`: testes automaticos.
+- `requirements.txt`: dependencias.
+- `slides/`: apresentacao em Beamer (LaTeX).

@@ -1,0 +1,294 @@
+\documentclass[aspectratio=169]{beamer}
+\usepackage[utf8]{inputenc} % codificacao de caracteres
+\usepackage[T1]{fontenc}    % codificacao de fontes
+\usepackage[brazil]{babel}  % idioma
+\usepackage{graphicx}       %fundo
+\usepackage{booktabs}       % tabelas
+\usetheme{default}          % tema
+\usecolortheme{orchid}     % cores
+\usefonttheme[onlymath]{serif} % fonte modo matematico
+
+\beamertemplatenavigationsymbolsempty % Desativando os botoes de navegacao
+
+% Tela cheia
+\hypersetup{pdfpagemode=FullScreen}
+
+% Titulo
+\makeatletter
+\newcommand\titlegraphicii[1]{\def\inserttitlegraphicii{#1}}
+\titlegraphicii{}
+\setbeamertemplate{title page}
+{
+  \vbox{}
+   {\usebeamercolor[fg]{titlegraphic}\inserttitlegraphic\hfill\inserttitlegraphicii\par}
+  \begin{centering}
+    \begin{beamercolorbox}[sep=2pt,center]{institute}
+      \usebeamerfont{institute}\insertinstitute
+    \end{beamercolorbox}
+    \begin{beamercolorbox}[sep=12pt,center]{title}
+      \usebeamerfont{title}\inserttitle\par%
+      \ifx\insertsubtitle\@empty%
+      \else%
+        \vskip0.2em%
+        {\usebeamerfont{subtitle}\usebeamercolor[fg]{subtitle}\insertsubtitle\par}%
+      \fi%
+    \end{beamercolorbox}%
+    \vskip0.2em\par
+    \begin{beamercolorbox}[sep=2pt,center]{author}
+      \usebeamerfont{author}\insertauthor
+    \end{beamercolorbox}
+    \begin{beamercolorbox}[sep=4pt,center]{date}
+      \usebeamerfont{date}\insertdate
+    \end{beamercolorbox}%\vskip0.5em
+  \end{centering}
+  %\vfill
+}
+\makeatother
+
+\title{O Jogo CHSH}
+\author{\textbf{Bruno Crestani \and Gustavo Jakobi}}
+\institute{UNIVERSIDADE FEDERAL DO PARANÁ \\
+SETOR DE CIÊNCIAS EXATAS \\
+DEPARTAMENTO DE INFORMÁTICA \\
+Introdução à Computação Quântica}
+\date{2026}
+
+
+% Let's get started
+\begin{document}
+{%
+ \usebackgroundtemplate{
+  \centering
+  \includegraphics[width=\paperwidth]{CapaUFPR.png}
+ }
+\begin{frame}
+  \titlepage
+\end{frame}
+}
+
+{%
+ \usebackgroundtemplate{
+  \centering
+  \includegraphics[width=\paperwidth]{FundoUFPR2.png}
+ }
+
+% ------------------------------------------------------------------
+\begin{frame}{Roteiro}
+  \begin{itemize}
+    \item O que é o jogo CHSH?
+    \item As regras
+    \item Estratégia clássica: o limite de 75\%
+    \item Estratégia quântica: emaranhamento e $\approx 85{,}4\%$
+    \item Demonstração ao vivo (simulação)
+    \item Conclusão
+  \end{itemize}
+\end{frame}
+
+% ------------------------------------------------------------------
+\section{Introdução}
+
+\begin{frame}{Motivação}
+  \begin{block}{A pergunta central}
+    Será que partículas quânticas podem produzir correlações
+    \alert{impossíveis} de reproduzir no mundo clássico?
+  \end{block}
+  \vskip0.5em
+  \begin{itemize}
+    \item \textbf{Emaranhamento:} dois qubits ficam ligados; medir um
+          afeta instantaneamente o resultado do outro.
+    \item \textbf{Não-localidade:} essas correlações são mais fortes
+          do que qualquer combinação local clássica permite.
+    \item O \textbf{jogo CHSH} (1969) transforma essa ideia abstrata em
+          algo mensurável: uma \alert{taxa de vitória}.
+  \end{itemize}
+\end{frame}
+
+% ------------------------------------------------------------------
+\section{O jogo}
+
+\begin{frame}{As regras do jogo}
+  Alice e Bob cooperam, mas estão \alert{separados e não podem se comunicar}.
+
+  \vskip0.6em
+  A cada rodada, um juiz sorteia dois bits:
+  \begin{itemize}
+    \item Alice recebe $x \in \{0,1\}$ \quad e responde $a \in \{0,1\}$.
+    \item Bob recebe $y \in \{0,1\}$ \quad e responde $b \in \{0,1\}$.
+  \end{itemize}
+
+  \vskip0.6em
+  \begin{block}{Condição de vitória}
+    \[
+      a \oplus b \;=\; x \wedge y
+    \]
+    (XOR das respostas igual ao AND das perguntas)
+  \end{block}
+\end{frame}
+
+\begin{frame}{Quando eles ganham?}
+  \begin{center}
+  \begin{tabular}{ccl}
+    \toprule
+    $x$ & $y$ & condição para ganhar \\
+    \midrule
+    0 & 0 & $a = b$ \\
+    0 & 1 & $a = b$ \\
+    1 & 0 & $a = b$ \\
+    1 & 1 & $a \neq b$ \\
+    \bottomrule
+  \end{tabular}
+  \end{center}
+
+  \vskip0.8em
+  Em 3 dos 4 casos eles precisam dar a \textbf{mesma} resposta.
+  Só quando $x = y = 1$ precisam dar respostas \textbf{diferentes}.
+\end{frame}
+
+% ------------------------------------------------------------------
+\section{Estratégia clássica}
+
+\begin{frame}{Estratégia clássica}
+  Estratégia mais simples possível: \alert{Alice e Bob sempre respondem $0$}.
+  \[
+    a = 0, \quad b = 0 \;\Rightarrow\; a \oplus b = 0
+  \]
+  \begin{itemize}
+    \item Ganham sempre que $x \wedge y = 0$ — ou seja, nos casos
+          $(0,0), (0,1), (1,0)$.
+    \item Perdem sempre no caso $(1,1)$.
+    \item Como as perguntas são sorteadas de forma uniforme:
+  \end{itemize}
+  \begin{block}{}
+    \centering
+    Taxa de vitória clássica $= \dfrac{3}{4} = 75\%$
+  \end{block}
+\end{frame}
+
+\begin{frame}{Por que 75\% é o teto clássico?}
+  \begin{itemize}
+    \item Qualquer estratégia clássica (mesmo com sorteios combinados
+          antes do jogo) pode ser reduzida a respostas fixas.
+    \item Testando todas as combinações possíveis de respostas, \alert{nenhuma}
+          acerta os 4 casos ao mesmo tempo.
+    \item No máximo acerta-se 3 dos 4 $\Rightarrow$ teto de $75\%$.
+  \end{itemize}
+  \begin{block}{Desigualdade CHSH (versão clássica / de Bell)}
+    Nenhuma teoria de \emph{variáveis locais} ultrapassa $75\%$.
+  \end{block}
+\end{frame}
+
+% ------------------------------------------------------------------
+\section{Estratégia quântica}
+
+\begin{frame}{A ideia quântica}
+  Antes do jogo, Alice e Bob compartilham um par emaranhado
+  (estado de Bell):
+  \[
+    \lvert \Phi^{+} \rangle = \frac{1}{\sqrt{2}}\big(\lvert 00 \rangle + \lvert 11 \rangle\big)
+  \]
+  \begin{itemize}
+    \item Cada um leva \textbf{um} qubit para o seu lado.
+    \item Ao receber a pergunta, cada jogador escolhe em qual
+          \alert{base} vai medir o seu qubit.
+    \item A resposta ($a$ ou $b$) é o resultado da medição.
+  \end{itemize}
+  \textbf{Eles continuam sem se comunicar} — só usam a correlação que
+  já estava no par emaranhado.
+\end{frame}
+
+\begin{frame}{As bases de medição}
+  Escolha ótima dos ângulos de medição:
+  \begin{center}
+  \begin{tabular}{ll}
+    \toprule
+    Alice & Bob \\
+    \midrule
+    $x=0 \to 0$         & $y=0 \to \pi/8$ \\
+    $x=1 \to \pi/4$     & $y=1 \to -\pi/8$ \\
+    \bottomrule
+  \end{tabular}
+  \end{center}
+  \vskip0.6em
+  Para o estado $\lvert \Phi^{+}\rangle$, a probabilidade de Alice e Bob
+  obterem o \textbf{mesmo} resultado é
+  \[
+    P(a = b) = \cos^2(\theta_A - \theta_B).
+  \]
+  Os ângulos foram escolhidos para que essa correlação satisfaça a
+  condição de vitória em \alert{todos} os 4 casos com a mesma probabilidade.
+\end{frame}
+
+\begin{frame}{O limite de Tsirelson}
+  Substituindo os ângulos, cada caso vence com probabilidade
+  \[
+    \cos^2\!\left(\frac{\pi}{8}\right) \approx 0{,}8536.
+  \]
+  \begin{block}{Taxa de vitória quântica}
+    \centering
+    $\cos^2(\pi/8) \approx 85{,}4\%$ \quad (limite de Tsirelson)
+  \end{block}
+  \vskip0.4em
+  \begin{itemize}
+    \item É o \alert{máximo} que a mecânica quântica permite — não dá para
+          passar disso.
+    \item Mas já é bem mais que os $75\%$ clássicos: a diferença é
+          \textbf{medível} e \textbf{real}.
+  \end{itemize}
+\end{frame}
+
+% ------------------------------------------------------------------
+\section{Demonstração}
+
+\begin{frame}[fragile]{O circuito quântico (Qiskit)}
+Montamos o circuito de verdade: estado de Bell + medições em bases giradas.
+\begin{verbatim}
+q0 (Alice): --[H]--*--------[ Ry(-pi/2) ]--[ medir ]-->  a
+                   |
+q1 (Bob):   ------(+)-------[ Ry( pi/4) ]--[ medir ]-->  b
+\end{verbatim}
+  \begin{itemize}
+    \item \texttt{H} + \texttt{CNOT}: criam o emaranhamento $\lvert\Phi^+\rangle$.
+    \item \texttt{Ry($\theta$)}: gira o qubit para medir na base certa.
+    \item Roda no simulador local \alert{Aer} — não precisa de hardware.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Demonstração ao vivo}
+\begin{verbatim}
+$ python3 chsh_qiskit.py
+
+  x=0, y=0 ( a = b):  2103/2500  (84.12%)
+  x=0, y=1 ( a = b):  2147/2500  (85.88%)
+  x=1, y=0 ( a = b):  2097/2500  (83.88%)
+  x=1, y=1 (a != b):  2171/2500  (86.84%)
+
+Taxa de vitoria quantica: 85.18%   (teorico: 85.36%)
+Limite classico:         75.00%
+\end{verbatim}
+  \vskip0.2em
+  \centering
+  O circuito quântico ultrapassa, de fato, o teto clássico de $75\%$.
+\end{frame}
+
+% ------------------------------------------------------------------
+\section*{Conclusão}
+
+\begin{frame}{Conclusão}
+  \begin{itemize}
+    \item O CHSH transforma uma ideia abstrata (não-localidade) em um
+          \alert{número} fácil de medir.
+    \item \textbf{Clássico:} no máximo $75\%$.
+    \item \textbf{Quântico:} $\approx 85{,}4\%$ usando emaranhamento.
+    \item Eles \emph{nunca} se comunicam — então a vantagem não viola a
+          relatividade; vem das correlações do estado de Bell.
+    \item Mesma ideia fundamenta aplicações como
+          \alert{criptografia quântica} e geração de aleatoriedade certificada.
+  \end{itemize}
+  \vskip0.6em
+  \centering
+  \textbf{Obrigado! Perguntas?}
+\end{frame}
+
+}
+
+\end{document}
